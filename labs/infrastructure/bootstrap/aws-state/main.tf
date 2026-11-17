@@ -15,13 +15,14 @@ resource "aws_s3_bucket" "terraform_state" {
     Name    = local.bucket_name
     Purpose = "TerraformRemoteState"
   }
-
+  #ngan khong cho xoa bucket khi tien hanh thuc hien terraform destroy
   lifecycle {
     prevent_destroy = true
   }
+  #end ngan khong cho xoa bucket khi tien hanh thuc hien terraform destroy
 }
 
-
+# ngan bucket hoac object duoc truy cap cong khai thong qua ACL hoac bucket policy
 resource "aws_s3_bucket_public_access_block" "terraform_state" {
   bucket = aws_s3_bucket.terraform_state.id
 
@@ -30,8 +31,9 @@ resource "aws_s3_bucket_public_access_block" "terraform_state" {
   ignore_public_acls      = true
   restrict_public_buckets = true
 }
+#end ngan bucket hoac object duoc truy cap cong khai thong qua ACL hoac bucket policy
 
-
+# ma hoa du lieu khi luu tru
 resource "aws_s3_bucket_server_side_encryption_configuration" "terraform_state" {
   bucket = aws_s3_bucket.terraform_state.id
 
@@ -41,9 +43,10 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "terraform_state" 
     }
   }
 }
+#end ma hoa du lieu khi luu tru
 
 
-
+#luu lai versioning de co the revert ve version cu ,neu terraform.tfstate cua version moi luu du lieu sai
 resource "aws_s3_bucket_versioning" "terraform_state" {
   bucket = aws_s3_bucket.terraform_state.id
 
@@ -51,6 +54,7 @@ resource "aws_s3_bucket_versioning" "terraform_state" {
     status = "Enabled"
   }
 }
+#end luu lai versioning de co the revert ve version cu ,neu terraform.tfstate cua version moi luu du lieu sai
 
 
 
